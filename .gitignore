@@ -1,0 +1,6 @@
+dist/
+build/
+pyecodevices.egg-info
+__pycache__
+publish
+.vscode/
