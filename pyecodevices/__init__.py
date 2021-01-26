@@ -1,69 +1,104 @@
-"""Get information from GCE Eco-Devices"""
+"""Get information from GCE Eco-Devices."""
 import requests
+import xmltodict
 
 
 class EcoDevices:
-    """Class representing the Eco-Devices and its API"""
+    """Class representing the Eco-Devices and its XML API."""
 
-    def __init__(self, host, port=80, username=None, password=None, timeout=2):
+    def __init__(self, host, port=80, username=None, password=None, timeout=3):
+        """Init a EcoDevice API."""
         self._host = host
         self._port = port
         self._username = username
         self._password = password
         self._timeout = timeout
-        self._api_url = f"http://{host}:{port}/api/xdevices.json"
+        self._api_url = f"http://{host}:{port}/status.xml"
 
-    @property
-    def host(self):
-        return self._host
-
-    def _request(self, params):
+    def _request(self):
         if self._username is not None and self._password is not None:
             r = requests.get(
                 self._api_url,
-                params=params,
+                params={},
                 auth=(self._username, self._password),
                 timeout=self._timeout,
             )
         else:
-            r = requests.get(self._api_url, params=params, timeout=self._timeout)
+            r = requests.get(self._api_url, params={}, timeout=self._timeout)
         r.raise_for_status()
-        content = r.json()
-        product = content.get("product", None)
-        if product == "Eco-devices":
-            return content
+        xml_content = xmltodict.parse(r.text)
+        response = xml_content.get("response", None)
+        if response:
+            return response
         else:
             raise Exception(
-                "Eco-Devices api request error, url: %s`r%s",
+                "Eco-Devices XML request error, url: %s`r%s",
                 r.request.url,
-                content,
+                response,
             )
 
+    @property
+    def host(self):
+        """Return the hostname."""
+        return self._host
+
+    @property
+    def mac_address(self):
+        """Return the mac address."""
+        return self._request().get("config_mac")
+
+    @property
+    def firmware(self):
+        """Return the firmware."""
+        return self._request().get("version")
+
     def ping(self) -> bool:
+        """Return true if Eco-Devices answer to API request."""
         try:
-            self._request({"cmd": 10})
+            self._request()
             return True
-        except:
+        except Exception:
             pass
         return False
 
     def global_get(self):
-        return self._request({"cmd": 10})
+        """Return all values from API."""
+        return self._request()
 
-    def get(self, key) -> int:
-        """Get value from keys: current_t1, current_t2, daily_c1, daily_c2, total_c1, total_c2"""
+    def get_t1(self):
+        """Get values from teleinformation 1 input."""
+        data = self._request()
+        return {
+            "current": data.get("T1_PAPP"),
+            "type_heures": data.get("T1_PTEC"),
+            "souscription": data.get("T1_ISOUSC"),
+            "intensite_max": data.get("T1_IMAX"),
+        }
 
-        if key == "current_t1":
-            return self._request({"cmd": 10}).get("T1_PAPP")
-        elif key == "current_t2":
-            return self._request({"cmd": 10}).get("T2_PAPP")
-        elif key == "daily_c1":
-            return self._request({"cmd": 20}).get("Day_C1")
-        elif key == "daily_c2":
-            return self._request({"cmd": 20}).get("Day_C2")
-        elif key == "total_c1":
-            return self._request({"cmd": 10}).get("INDEX_C1")
-        elif key == "total_c2":
-            return self._request({"cmd": 10}).get("INDEX_C2")
-        else:
-            raise Exception("key not found.")
+    def get_t2(self):
+        """Get values from teleinformation 1 input."""
+        data = self._request()
+        return {
+            "current": data.get("T2_PAPP"),
+            "type_heures": data.get("T2_PTEC"),
+            "souscription": data.get("T2_ISOUSC"),
+            "intensite_max": data.get("T2_IMAX"),
+        }
+
+    def get_c1(self):
+        """Get values from meter 1 input."""
+        data = self._request()
+        return {
+            "daily": data.get("c0day"),
+            "total": data.get("count0"),
+            "fuel": data.get("c0_fuel"),
+        }
+
+    def get_c2(self):
+        """Get values from meter 2 input."""
+        data = self._request()
+        return {
+            "daily": data.get("c1day"),
+            "total": data.get("count1"),
+            "fuel": data.get("c1_fuel"),
+        }
