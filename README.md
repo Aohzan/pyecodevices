@@ -8,7 +8,7 @@ Get information from GCE Eco-Devices
 - `port`: (default: 80)
 - `username`: if authentication enabled on Eco-Devices
 - `password`: if authentication enabled on Eco-Devices
-- `timeout`: (default: 3)
+- `request_timeout`: (default: 3)
 
 ## Properties
 
@@ -30,17 +30,23 @@ Get information from GCE Eco-Devices
 ```python
 from pyecodevices import EcoDevices
 
-ecodevices = EcoDevices('192.168.1.239','80',"username","password")
+import asyncio
 
-print("# ping")
-print(ecodevices.ping())
-print("# firmware version")
-print(ecodevices.firmware)
-print("# all values")
-print(ecodevices.global_get())
-print("# inputs values")
-print(ecodevices.get_t1())
-print(ecodevices.get_t2())
-print(ecodevices.get_c1())
-print(ecodevices.get_c2())
+
+async def main():
+    async with EcoDevices('192.168.1.239', '80', "username", "password") as ecodevices:
+        ping = await ecodevices.ping()
+        print("ping:", ping)
+        version = await ecodevices.firmware
+        print("firmware version: ", version)
+        data = await ecodevices.global_get()
+        print("all values: ", data)
+        data = await ecodevices.get_t1()
+        print("teleinfo 1: ", data["current"])
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+
 ```
