@@ -17,7 +17,7 @@ class EcoDevices:
         username: str = None,
         password: str = None,
         request_timeout: int = 10,
-        session: aiohttp.client.ClientSession = None
+        session: aiohttp.client.ClientSession = None,
     ) -> None:
         """Init a EcoDevice API."""
         self._host = host
@@ -26,9 +26,17 @@ class EcoDevices:
         self._password = password
         self._request_timeout = request_timeout
         self._api_url = f"http://{host}:{port}/status.xml"
+        self._version = None
+        self._mac_address = None
 
         self._session = session
         self._close_session = False
+
+    async def get_info(self):
+        """Get properties from API."""
+        init_data = await self._request()
+        self._version = init_data["version"]
+        self._mac_address = init_data["config_mac"]
 
     async def _request(self) -> dict:
         """Make a request to get Eco-Devices data."""
@@ -53,17 +61,15 @@ class EcoDevices:
                     ssl=False,
                 )
         except asyncio.TimeoutError as exception:
-            raise CannotConnectError(
+            raise EcoDevicesCannotConnectError(
                 "Timeout occurred while connecting to Eco-Devices."
             ) from exception
         except (aiohttp.ClientError, socket.gaierror) as exception:
-            raise CannotConnectError(
+            raise EcoDevicesCannotConnectError(
                 "Error occurred while communicating with Eco-Devices."
             ) from exception
         if response.status == 401:
-            raise InvalidAuthError(
-                "Authentication failed with Eco-Devices."
-            )
+            raise EcoDevicesInvalidAuthError("Authentication failed with Eco-Devices.")
 
         if response.status:
             contents = await response.text()
@@ -72,7 +78,7 @@ class EcoDevices:
             data = xml_content.get("response", None)
             if data:
                 return data
-            raise CannotConnectError("Eco-Devices XML request error:", data)
+            raise EcoDevicesCannotConnectError("Eco-Devices XML request error:", data)
 
     @property
     def host(self) -> str:
@@ -80,22 +86,14 @@ class EcoDevices:
         return self._host
 
     @property
-    async def mac_address(self) -> str:
+    def mac_address(self) -> str:
         """Return the mac address."""
-        data = await self._request()
-        return data["config_mac"]
+        return self._mac_address
 
     @property
-    async def firmware(self) -> str:
-        """Return the mac address."""
-        data = await self._request()
-        return data["version"]
-
-    async def ping(self) -> bool:
-        """Return true if Eco-Devices answer to API request."""
-        if await self._request():
-            return True
-        return False
+    def version(self) -> str:
+        """Return the firmware version."""
+        return self._version
 
     async def global_get(self) -> dict:
         """Return all values from API."""
@@ -153,9 +151,9 @@ class EcoDevices:
         await self.close()
 
 
-class CannotConnectError(Exception):
+class EcoDevicesCannotConnectError(Exception):
     """Exception to indicate an error in connection."""
 
 
-class InvalidAuthError(Exception):
+class EcoDevicesInvalidAuthError(Exception):
     """Exception to indicate an error in authentication."""
