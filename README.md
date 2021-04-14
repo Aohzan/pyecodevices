@@ -40,7 +40,8 @@ async def main():
         data = await ecodevices.global_get()
         print("all values:", data)
         data = await ecodevices.get_t1()
-        print("teleinfo 1:", data["current"], "VA")
+        print("teleinfo 1:", data)
+        print("current:", data["current"], "VA")
 
 
 if __name__ == "__main__":

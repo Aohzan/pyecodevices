@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyecodevices",
-    version="1.2.1",
+    version="1.3.0",
     author="Aohzan",
     author_email="aohzan@gmail.com",
     description="Get information from GCE Eco-Devices.",

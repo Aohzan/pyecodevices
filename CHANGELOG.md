@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0
+
+- Add information for teleinfo inputs
+
 ## 1.2.1
 
 - Make async requests

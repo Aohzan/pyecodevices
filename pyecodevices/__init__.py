@@ -26,6 +26,8 @@ class EcoDevices:
         self._password = password
         self._request_timeout = request_timeout
         self._api_url = f"http://{host}:{port}/status.xml"
+        self._api_teleinfo_1_url = f"http://{host}:{port}/protect/settings/teleinfo1.xml"
+        self._api_teleinfo_2_url = f"http://{host}:{port}/protect/settings/teleinfo2.xml"
         self._version = None
         self._mac_address = None
 
@@ -34,11 +36,11 @@ class EcoDevices:
 
     async def get_info(self):
         """Get properties from API."""
-        init_data = await self._request()
+        init_data = await self._request(self._api_url)
         self._version = init_data["version"]
         self._mac_address = init_data["config_mac"]
 
-    async def _request(self) -> dict:
+    async def _request(self, url: str) -> dict:
         """Make a request to get Eco-Devices data."""
         auth = None
         if self._username and self._password:
@@ -52,7 +54,7 @@ class EcoDevices:
             with async_timeout.timeout(self._request_timeout):
                 response = await self._session.request(
                     "GET",
-                    self._api_url,
+                    url,
                     auth=auth,
                     data=None,
                     json=None,
@@ -97,31 +99,68 @@ class EcoDevices:
 
     async def global_get(self) -> dict:
         """Return all values from API."""
-        return await self._request()
+        result = await self._request(self._api_url)
+        result.update(await self._request(self._api_teleinfo_1_url))
+        result.update(await self._request(self._api_teleinfo_2_url))
+        return result
 
     async def get_t1(self) -> dict:
         """Get values from teleinformation 1 input."""
-        data = await self._request()
+        data = await self._request(self._api_teleinfo_1_url)
         return {
             "current": data.get("T1_PAPP"),
             "type_heures": data.get("T1_PTEC"),
             "souscription": data.get("T1_ISOUSC"),
             "intensite_max": data.get("T1_IMAX"),
+            "intensite_max_ph1": data.get("T1_IMAX1"),
+            "intensite_max_ph2": data.get("T1_IMAX2"),
+            "intensite_max_ph3": data.get("T1_IMAX3"),
+            "intensite_now": data.get("T1_IINST"),
+            "intensite_now_ph1": data.get("T1_IINST1"),
+            "intensite_now_ph2": data.get("T1_IINST2"),
+            "intensite_now_ph3": data.get("T1_IINST3"),
+            "numero_compteur": data.get("T1_ADCO"),
+            "option_tarifaire": data.get("T1_OPTARIF"),
+            "index_base": data.get("T1_BASE"),
+            "index_heures_creuses": data.get("T1_HCHC"),
+            "index_heures_pleines": data.get("T1_HCHP"),
+            "index_heures_normales": data.get("T1_EJPHN"),
+            "index_heures_pointes": data.get("T1_EJPHPM"),
+            "preavis_heures_pointes": data.get("T1_PEJP"),
+            "groupe_horaire": data.get("T1_HHPHC"),
+            "etat": data.get("T1_MOTDETAT"),
         }
 
     async def get_t2(self) -> dict:
-        """Get values from teleinformation 1 input."""
-        data = await self._request()
+        """Get values from teleinformation 2 input."""
+        data = await self._request(self._api_teleinfo_2_url)
         return {
             "current": data.get("T2_PAPP"),
             "type_heures": data.get("T2_PTEC"),
             "souscription": data.get("T2_ISOUSC"),
             "intensite_max": data.get("T2_IMAX"),
+            "intensite_max_ph1": data.get("T2_IMAX1"),
+            "intensite_max_ph2": data.get("T2_IMAX2"),
+            "intensite_max_ph3": data.get("T2_IMAX3"),
+            "intensite_now": data.get("T2_IINST"),
+            "intensite_now_ph1": data.get("T2_IINST1"),
+            "intensite_now_ph2": data.get("T2_IINST2"),
+            "intensite_now_ph3": data.get("T2_IINST3"),
+            "numero_compteur": data.get("T2_ADCO"),
+            "option_tarifaire": data.get("T2_OPTARIF"),
+            "index_base": data.get("T2_BASE"),
+            "index_heures_creuses": data.get("T2_HCHC"),
+            "index_heures_pleines": data.get("T2_HCHP"),
+            "index_heures_normales": data.get("T2_EJPHN"),
+            "index_heures_pointes": data.get("T2_EJPHPM"),
+            "preavis_heures_pointes": data.get("T2_PEJP"),
+            "groupe_horaire": data.get("T2_HHPHC"),
+            "etat": data.get("T2_MOTDETAT"),
         }
 
     async def get_c1(self) -> dict:
         """Get values from meter 1 input."""
-        data = await self._request()
+        data = await self._request(self._api_url)
         return {
             "daily": data.get("c0day"),
             "total": data.get("count0"),
@@ -130,7 +169,7 @@ class EcoDevices:
 
     async def get_c2(self) -> dict:
         """Get values from meter 2 input."""
-        data = await self._request()
+        data = await self._request(self._api_url)
         return {
             "daily": data.get("c1day"),
             "total": data.get("count1"),
