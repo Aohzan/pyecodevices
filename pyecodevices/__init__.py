@@ -52,15 +52,9 @@ class EcoDevices:
 
         try:
             with async_timeout.timeout(self._request_timeout):
-                response = await self._session.request(
-                    "GET",
+                response = await self._session.get(
                     url,
-                    auth=auth,
-                    data=None,
-                    json=None,
-                    params=None,
-                    headers={},
-                    ssl=False,
+                    auth=auth
                 )
         except asyncio.TimeoutError as exception:
             raise EcoDevicesCannotConnectError(
@@ -71,7 +65,8 @@ class EcoDevices:
                 "Error occurred while communicating with Eco-Devices."
             ) from exception
         if response.status == 401:
-            raise EcoDevicesInvalidAuthError("Authentication failed with Eco-Devices.")
+            raise EcoDevicesInvalidAuthError(
+                "Authentication failed with Eco-Devices.")
 
         if response.status:
             contents = await response.text()
@@ -80,7 +75,8 @@ class EcoDevices:
             data = xml_content.get("response", None)
             if data:
                 return data
-            raise EcoDevicesCannotConnectError("Eco-Devices XML request error:", data)
+            raise EcoDevicesCannotConnectError(
+                "Eco-Devices XML request error:", data)
 
     @property
     def host(self) -> str:
