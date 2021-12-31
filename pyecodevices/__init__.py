@@ -84,6 +84,11 @@ class EcoDevices:
         return self._host
 
     @property
+    def port(self) -> int:
+        """Return the port."""
+        return self._port
+
+    @property
     def mac_address(self) -> str:
         """Return the mac address."""
         return self._mac_address

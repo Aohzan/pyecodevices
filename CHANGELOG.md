@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0
+
+- Add port property
+  
 ## 1.3.0
 
 - Add information for teleinfo inputs
