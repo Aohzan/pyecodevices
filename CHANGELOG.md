@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0
+
+- Add index for jours bleu,blanc,rouge
+
 ## 1.4.0
 
 - Add port property

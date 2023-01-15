@@ -26,8 +26,12 @@ class EcoDevices:
         self._password = password
         self._request_timeout = request_timeout
         self._api_url = f"http://{host}:{port}/status.xml"
-        self._api_teleinfo_1_url = f"http://{host}:{port}/protect/settings/teleinfo1.xml"
-        self._api_teleinfo_2_url = f"http://{host}:{port}/protect/settings/teleinfo2.xml"
+        self._api_teleinfo_1_url = (
+            f"http://{host}:{port}/protect/settings/teleinfo1.xml"
+        )
+        self._api_teleinfo_2_url = (
+            f"http://{host}:{port}/protect/settings/teleinfo2.xml"
+        )
         self._version = None
         self._mac_address = None
 
@@ -52,10 +56,7 @@ class EcoDevices:
 
         try:
             with async_timeout.timeout(self._request_timeout):
-                response = await self._session.get(
-                    url,
-                    auth=auth
-                )
+                response = await self._session.get(url, auth=auth)
         except asyncio.TimeoutError as exception:
             raise EcoDevicesCannotConnectError(
                 "Timeout occurred while connecting to Eco-Devices."
@@ -65,8 +66,7 @@ class EcoDevices:
                 "Error occurred while communicating with Eco-Devices."
             ) from exception
         if response.status == 401:
-            raise EcoDevicesInvalidAuthError(
-                "Authentication failed with Eco-Devices.")
+            raise EcoDevicesInvalidAuthError("Authentication failed with Eco-Devices.")
 
         if response.status:
             contents = await response.text()
@@ -75,8 +75,7 @@ class EcoDevices:
             data = xml_content.get("response", None)
             if data:
                 return data
-            raise EcoDevicesCannotConnectError(
-                "Eco-Devices XML request error:", data)
+            raise EcoDevicesCannotConnectError("Eco-Devices XML request error:", data)
 
     @property
     def host(self) -> str:
@@ -129,6 +128,12 @@ class EcoDevices:
             "index_heures_pointes": data.get("T1_EJPHPM"),
             "preavis_heures_pointes": data.get("T1_PEJP"),
             "groupe_horaire": data.get("T1_HHPHC"),
+            "index_heures_creuses_jour_bleu": data.get("T1_BBRHCJB"),
+            "index_heures_pleines_jour_bleu": data.get("T1_BBRHPJB"),
+            "index_heures_creuses_jour_blanc": data.get("T1_BBRHCJW"),
+            "index_heures_pleines_jour_blanc": data.get("T1_BBRHCJB"),
+            "index_heures_creuses_jour_rouge": data.get("T1_BBRHCJB"),
+            "index_heures_pleines_jour_rouge": data.get("T1_BBRHPJR"),
             "etat": data.get("T1_MOTDETAT"),
         }
 
@@ -156,6 +161,12 @@ class EcoDevices:
             "index_heures_pointes": data.get("T2_EJPHPM"),
             "preavis_heures_pointes": data.get("T2_PEJP"),
             "groupe_horaire": data.get("T2_HHPHC"),
+            "index_heures_creuses_jour_bleu": data.get("T2_BBRHCJB"),
+            "index_heures_pleines_jour_bleu": data.get("T2_BBRHPJB"),
+            "index_heures_creuses_jour_blanc": data.get("T2_BBRHCJW"),
+            "index_heures_pleines_jour_blanc": data.get("T2_BBRHCJB"),
+            "index_heures_creuses_jour_rouge": data.get("T2_BBRHCJB"),
+            "index_heures_pleines_jour_rouge": data.get("T2_BBRHPJR"),
             "etat": data.get("T2_MOTDETAT"),
         }
 
