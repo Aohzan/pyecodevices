@@ -131,8 +131,8 @@ class EcoDevices:
             "index_heures_creuses_jour_bleu": data.get("T1_BBRHCJB"),
             "index_heures_pleines_jour_bleu": data.get("T1_BBRHPJB"),
             "index_heures_creuses_jour_blanc": data.get("T1_BBRHCJW"),
-            "index_heures_pleines_jour_blanc": data.get("T1_BBRHCJB"),
-            "index_heures_creuses_jour_rouge": data.get("T1_BBRHCJB"),
+            "index_heures_pleines_jour_blanc": data.get("T1_BBRHPJW"),
+            "index_heures_creuses_jour_rouge": data.get("T1_BBRHCJR"),
             "index_heures_pleines_jour_rouge": data.get("T1_BBRHPJR"),
             "etat": data.get("T1_MOTDETAT"),
         }
@@ -164,8 +164,8 @@ class EcoDevices:
             "index_heures_creuses_jour_bleu": data.get("T2_BBRHCJB"),
             "index_heures_pleines_jour_bleu": data.get("T2_BBRHPJB"),
             "index_heures_creuses_jour_blanc": data.get("T2_BBRHCJW"),
-            "index_heures_pleines_jour_blanc": data.get("T2_BBRHCJB"),
-            "index_heures_creuses_jour_rouge": data.get("T2_BBRHCJB"),
+            "index_heures_pleines_jour_blanc": data.get("T2_BBRHPJW"),
+            "index_heures_creuses_jour_rouge": data.get("T2_BBRHCJR"),
             "index_heures_pleines_jour_rouge": data.get("T2_BBRHPJR"),
             "etat": data.get("T2_MOTDETAT"),
         }
