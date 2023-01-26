@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1
+
+- Fix keys
+
 ## 1.5.0
 
 - Add index for jours bleu,blanc,rouge
