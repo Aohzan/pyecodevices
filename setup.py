@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyecodevices",
-    version="1.5.1",
+    version="1.6.0",
     author="Aohzan",
     author_email="aohzan@gmail.com",
     description="Get information from GCE Eco-Devices.",
@@ -18,5 +18,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.8',
 )

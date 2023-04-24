@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.0
+
+- Add logging
+
 ## 1.5.1
 
 - Fix keys

@@ -1,11 +1,13 @@
 """Get information from GCE Eco-Devices."""
 import asyncio
 import socket
+import logging
 
 import aiohttp
 import async_timeout
 import xmltodict
 
+_LOGGER = logging.getLogger(__name__)
 
 class EcoDevices:
     """Class representing the Eco-Devices and its XML API."""
@@ -71,9 +73,9 @@ class EcoDevices:
         if response.status:
             contents = await response.text()
             response.close()
+            _LOGGER.debug("Data received from the Eco-Devices: %s", contents)
             xml_content = xmltodict.parse(contents)
-            data = xml_content.get("response", None)
-            if data:
+            if (data := xml_content.get("response")):
                 return data
             raise EcoDevicesCannotConnectError("Eco-Devices XML request error:", data)
 
