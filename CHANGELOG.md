@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.0
+
+- Fix deprecations warning
+
 ## 1.6.0
 
 - Add logging

@@ -4,4 +4,4 @@ pyecodevices.egg-info
 __pycache__
 publish
 .vscode/
-test.py
+.venv

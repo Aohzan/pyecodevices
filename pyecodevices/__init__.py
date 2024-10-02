@@ -1,13 +1,15 @@
 """Get information from GCE Eco-Devices."""
+
 import asyncio
-import socket
 import logging
+import socket
 
 import aiohttp
-import async_timeout
 import xmltodict
+from async_timeout import timeout
 
 _LOGGER = logging.getLogger(__name__)
+
 
 class EcoDevices:
     """Class representing the Eco-Devices and its XML API."""
@@ -57,7 +59,7 @@ class EcoDevices:
             self._close_session = True
 
         try:
-            with async_timeout.timeout(self._request_timeout):
+            with timeout(self._request_timeout):
                 response = await self._session.get(url, auth=auth)
         except asyncio.TimeoutError as exception:
             raise EcoDevicesCannotConnectError(
@@ -75,7 +77,7 @@ class EcoDevices:
             response.close()
             _LOGGER.debug("Data received from the Eco-Devices: %s", contents)
             xml_content = xmltodict.parse(contents)
-            if (data := xml_content.get("response")):
+            if data := xml_content.get("response"):
                 return data
             raise EcoDevicesCannotConnectError("Eco-Devices XML request error:", data)
 
