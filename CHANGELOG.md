@@ -1,5 +1,7 @@
 # Changelog
 
+<!-- version list -->
+
 ## 1.7.0
 
 - Fix deprecations warning
