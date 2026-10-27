@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v1.7.2 (2026-10-27)
+
+### Bug Fixes
+
+- Annotate the optional credentials and session
+  ([#10](https://github.com/Aohzan/pyecodevices/pull/10),
+  [`bfb1f81`](https://github.com/Aohzan/pyecodevices/commit/bfb1f81155a97eb4eb72537d5e4e54582799bf3b))
+
+
 ## v1.7.1 (2026-10-27)
 
 ### Bug Fixes
