@@ -10,10 +10,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 dependencies = [
     "aiohttp>=3.10.0",
-    "async-timeout>=4.0.0",
     "xmltodict>=0.13.0",
 ]
 

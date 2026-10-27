@@ -6,7 +6,6 @@ import socket
 
 import aiohttp
 import xmltodict
-from async_timeout import timeout
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,9 +58,9 @@ class EcoDevices:
             self._close_session = True
 
         try:
-            with timeout(self._request_timeout):
+            async with asyncio.timeout(self._request_timeout):
                 response = await self._session.get(url, auth=auth)
-        except asyncio.TimeoutError as exception:
+        except TimeoutError as exception:
             raise EcoDevicesCannotConnectError(
                 "Timeout occurred while connecting to Eco-Devices."
             ) from exception
