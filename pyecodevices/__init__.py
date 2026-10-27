@@ -17,10 +17,10 @@ class EcoDevices:
         self,
         host: str,
         port: int = 80,
-        username: str = None,
-        password: str = None,
+        username: str | None = None,
+        password: str | None = None,
         request_timeout: int = 10,
-        session: aiohttp.client.ClientSession = None,
+        session: aiohttp.ClientSession | None = None,
     ) -> None:
         """Init a EcoDevice API."""
         self._host = host
