@@ -2,6 +2,27 @@
 
 <!-- version list -->
 
+## v1.7.1 (2026-10-27)
+
+### Bug Fixes
+
+- Use asyncio.timeout instead of async_timeout
+  ([`5f68f39`](https://github.com/Aohzan/pyecodevices/commit/5f68f39da92540eef413807f52720782b4d279ef))
+
+### Build System
+
+- Package with pyproject.toml and uv
+  ([`c981403`](https://github.com/Aohzan/pyecodevices/commit/c9814039b14434c925a28048096fa0fda31861ed))
+
+### Continuous Integration
+
+- Keep actions and dependencies up to date with Dependabot
+  ([`9bab28b`](https://github.com/Aohzan/pyecodevices/commit/9bab28bc32f6de267f53831ae31b7d4f64dc2bbf))
+
+- Release to PyPI with python-semantic-release
+  ([`b150099`](https://github.com/Aohzan/pyecodevices/commit/b150099327a5c1f3ac912d1339212371e58bb6e1))
+
+
 ## 1.7.0
 
 - Fix deprecations warning
